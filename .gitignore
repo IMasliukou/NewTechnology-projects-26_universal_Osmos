@@ -12,3 +12,6 @@ _autosave-*
 # KiCad editor lock files
 *.lck
 ~*.lck
+
+# Локальный кэш базы знаний стандартов (тянется скриптом sync-standards.sh)
+/.standards-cache/
