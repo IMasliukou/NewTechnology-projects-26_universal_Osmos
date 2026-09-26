@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 # Reproducible, headless export of KiCad schematics to review artifacts.
 #
+# This is an electrical/control-schematic workflow (automation projects):
+# only schematics matter, there is no PCB. We therefore export schematic
+# review artifacts only (no footprints/gerbers/DRC).
+#
 # For each schematic it produces, under output/<project>/:
 #   - <project>.pdf   : printable schematic
 #   - <project>.svg   : vector schematic (good for diffs / web review)
-#   - <project>.net   : KiCad netlist (electrical connectivity)
+#   - <project>.net   : KiCad netlist (wiring / connection list)
+#   - <project>.bom.csv : Bill of Materials (component list, grouped by value)
 #   - <project>.erc   : Electrical Rules Check report (KiCad 8+)
 #   - <project>.png   : raster preview (if pdftoppm is available)
 #
@@ -59,6 +64,11 @@ for sch in "${schematics[@]}"; do
   kicad-cli sch export pdf     --output "${outdir}/${name}.pdf" "$sch"
   kicad-cli sch export svg     --output "${outdir}"             "$sch"
   kicad-cli sch export netlist --output "${outdir}/${name}.net" "$sch"
+  kicad-cli sch export bom \
+    --fields 'Reference,Value,${QUANTITY}' \
+    --labels 'Refs,Value,Qty' \
+    --group-by Value \
+    --output "${outdir}/${name}.bom.csv" "$sch"
 
   # Electrical Rules Check (available since KiCad 8). Report is saved even when
   # violations exist; we surface the summary line but do not fail the export.
