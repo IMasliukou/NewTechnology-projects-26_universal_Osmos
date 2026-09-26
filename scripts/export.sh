@@ -5,6 +5,7 @@
 #   - <project>.pdf   : printable schematic
 #   - <project>.svg   : vector schematic (good for diffs / web review)
 #   - <project>.net   : KiCad netlist (electrical connectivity)
+#   - <project>.erc   : Electrical Rules Check report (KiCad 8+)
 #   - <project>.png   : raster preview (if pdftoppm is available)
 #
 # Usage:
@@ -58,6 +59,15 @@ for sch in "${schematics[@]}"; do
   kicad-cli sch export pdf     --output "${outdir}/${name}.pdf" "$sch"
   kicad-cli sch export svg     --output "${outdir}"             "$sch"
   kicad-cli sch export netlist --output "${outdir}/${name}.net" "$sch"
+
+  # Electrical Rules Check (available since KiCad 8). Report is saved even when
+  # violations exist; we surface the summary line but do not fail the export.
+  if kicad-cli sch erc --help >/dev/null 2>&1; then
+    kicad-cli sch erc --output "${outdir}/${name}.erc" "$sch" >/dev/null 2>&1 || true
+    if [ -f "${outdir}/${name}.erc" ]; then
+      grep -E "ERC messages" "${outdir}/${name}.erc" | sed 's/^/    ERC: /' || true
+    fi
+  fi
 
   if command -v pdftoppm >/dev/null 2>&1; then
     pdftoppm -png -r 150 -singlefile "${outdir}/${name}.pdf" "${outdir}/${name}" >/dev/null 2>&1 || true

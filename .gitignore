@@ -8,3 +8,7 @@ fp-info-cache
 _autosave-*
 *.bak
 *~
+
+# KiCad editor lock files
+*.lck
+~*.lck
