@@ -4,15 +4,17 @@
 #
 # We pin ONE KiCad version for the whole team so that local and cloud use the
 # same file format (a schematic saved by a newer KiCad cannot be opened by an
-# older one). By default we use the latest STABLE release from the official
-# KiCad PPA. Override KICAD_PPA to switch streams, e.g.:
-#   KICAD_PPA=kicad/kicad-10.0-nightly bash scripts/setup.sh   # bleeding edge
+# older one). By default we use the current STABLE release (10.0.x) from the
+# official KiCad PPA, matching the stable KiCad on engineers' Windows machines.
+# Override KICAD_PPA to switch streams, e.g.:
+#   KICAD_PPA=kicad/kicad-9.0-releases  bash scripts/setup.sh   # previous stable
+#   KICAD_PPA=kicad/kicad-10.0-nightly  bash scripts/setup.sh   # bleeding edge
 set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
-# Official KiCad PPA to install from (stable 9.0.x by default).
-KICAD_PPA="${KICAD_PPA:-kicad/kicad-9.0-releases}"
+# Official KiCad PPA to install from (stable 10.0.x by default).
+KICAD_PPA="${KICAD_PPA:-kicad/kicad-10.0-releases}"
 
 APT_PACKAGES=(
   kicad            # KiCad EDA suite (provides kicad-cli, eeschema, pcbnew)
