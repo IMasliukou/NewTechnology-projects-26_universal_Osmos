@@ -1,0 +1,17 @@
+(kicad_sch (version 20230121) (generator eeschema)
+  (uuid eceddfbc-e18a-4482-afbe-dd38c0558b36)
+  (paper "A4")
+  (title_block
+    (title "<PROJECT TITLE>")
+    (date "")
+    (rev "A")
+    (company "ModernTechnologies")
+    (comment 1 "ModernTechnologies — schematic")
+  )
+
+  (lib_symbols)
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
