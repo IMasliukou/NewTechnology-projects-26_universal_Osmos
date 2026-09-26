@@ -213,6 +213,38 @@ scripts/sync-standards.sh
 5. **Коммит исходников** `.kicad_*` в git, изменения идут через PR.
 6. `output/` в git не храним — он всегда пересобирается из исходников.
 
+## Локальная работа в Cursor Desktop (Windows)
+
+Часть работы можно вести локально, без облака. В Cursor Desktop агент работает
+**прямо в ваших файлах на ПК** — без пересылки файлов через git между вами и
+агентом (git остаётся только для командной работы и истории).
+
+### Разовая настройка
+1. Установите **Git for Windows** (даёт `git` и терминал **Git Bash**) и **Cursor Desktop**.
+2. Склонируйте репозиторий: в Cursor → *Clone repository*, либо `git clone <URL-репозитория>`.
+3. Откройте папку в Cursor и переключитесь на нужную ветку
+   (пока PR не смержен — `cursor/kicad-schematic-workflow-a68d`; после мержа — `main`).
+4. Добавьте `kicad-cli` в `PATH` — папку `C:\Program Files\KiCad\10.0\bin`.
+   Проверка в терминале: `kicad-cli version` → должно быть `10.0.6`.
+
+### Что важно про скрипты на Windows
+- `scripts/setup.sh` — **только для облака** (Linux/apt). На Windows KiCad вы ставите
+  вручную (уже сделано, 10.0.6) — `setup.sh` не нужен.
+- `scripts/export.sh` и `scripts/sync-standards.sh` — bash-скрипты; запускайте их в
+  **Git Bash** (или выберите Git Bash терминалом в Cursor). PNG-превью пропустится,
+  если нет `poppler` — это не критично, PDF/SVG/нетлист/BOM/ERC будут.
+- `.cursor/environment.json` локально **не используется** (это конфиг только для
+  облачных агентов). `.cursor/rules/` работает и локально — агент соблюдает правила.
+
+### Ежедневный цикл локально
+1. Рисуете в KiCad (`eeschema`), файлы в `projects/<имя>/`.
+2. Проверка/экспорт: в GUI (`Inspect → Electrical Rules Checker`, `File → Plot`) или
+   `bash scripts/export.sh projects/<имя>` в Git Bash.
+3. Обновить правила из базы знаний: `bash scripts/sync-standards.sh`.
+4. Коммит и пуш из Cursor (или `git`).
+
+Репозиторий один и тот же локально и в облаке — меняется только то, где вы кликаете.
+
 ## Единые правила для проектов ModernTechnologies
 
 1. Один проект = одна папка в `projects/<имя>/`.
